@@ -97,13 +97,41 @@ sub showPerticularMonthsExpense
 		}
 }
 
+sub deleteExpense
+{
+		print "\nEnter the id of the expense\n";
+		my $id = <>;
+		my $sql = "DELETE FROM expenses WHERE id=".$id;
+		$dbh->do($sql);
+
+}
+
+sub showExpensesCategoryWise
+{
+		print "\nPlease enter the category name\n";
+		my $category = <>;
+		my $sql = "SELECT * FROM expenses where category='".$category."'";
+		my $sth = $dbh->prepare($sql);
+		$sth->execute();
+		my $count = 0;
+		while (my @row = $sth->fetchrow_array)
+		{
+			$count++;
+		   print "\nID:$row[0]\nDate:$row[1]\nCategory:$row[2]\nAmount:$row[3]\n----------------------";
+		}
+		if($count == 0)
+		{
+			print "\nThere are no expenses in the database with category=".$category."\n";
+		}
+
+}
 
 print "1.Insert Record \n2.Show All Records\n3.Show Current month's all expenses\n4.Show current month's total expenses\n".
-"5.View Expenses of a perticular month\n6.Exit\n";
+"5.View Expenses of a perticular month\n6.Delete An Expense\n7.Show Expenses Category Wise\n8.Exit\n";
 
 my $choice = <>;
 
-while($choice != 6)
+while($choice != 8)
 {
 		if($choice == 1)
 		{
@@ -127,15 +155,23 @@ while($choice != 6)
 		}
 		elsif($choice == 6)
 		{
-			
+			deleteExpense();
+		}
+		elsif($choice == 7)
+		{
+			showExpensesCategoryWise();
+		}
+		elsif($choice == 8)
+		{
+			last;
 		}
 		else
 		{
 			print "Please enter proper choice";
 		}
 
-		print "\n1.Insert Record \n2.Show All Records\n3.Show Current month's all expenses\n4.Show current month's total expenses\n".
-		"5.View Expenses of a perticular month\n6.Exit\n";
+		print "1.Insert Record \n2.Show All Records\n3.Show Current month's all expenses\n4.Show current month's total expenses\n".
+"5.View Expenses of a perticular month\n6.Delete An Expense\n7.Show Expenses Category Wise\n8.Exit\n";
 
 		$choice = <>;
 }
