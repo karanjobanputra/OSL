@@ -1,4 +1,10 @@
- def find_empty_location(arr,emtpy_location):
+def print_grid(arr):
+    for i in range(9):
+        for j in range(9):
+            print arr[i][j],
+        print ('')
+ 
+def find_empty_location(arr,emtpy_location):
     for row in range(9):
         for col in range(9):
             if(arr[row][col]==0):
@@ -25,6 +31,10 @@ def used_in_box(arr,row,col,num):
             if(arr[i+row][j+col] == num):
                 return True
     return False
+ 
+def check_location_is_safe(arr,row,col,num):
+     return not used_in_row(arr,row,num) and not used_in_col(arr,col,num) and not used_in_box(arr,row - row%3,col - col%3,num)
+ 
 def solve_sudoku(arr):
       
     emtpy_location=[0,0]
@@ -36,7 +46,7 @@ def solve_sudoku(arr):
     col=emtpy_location[1]
     
     for num in range(1,10):
-        if(not used_in_row(arr,row,num) and not used_in_col(arr,col,num) and not used_in_box(arr,row - row%3,col - col%3,num)):
+        if(check_location_is_safe(arr,row,col,num)):
             arr[row][col]=num
             if(solve_sudoku(arr)):
                 return True
@@ -58,9 +68,8 @@ if __name__=="__main__":
           [7,0,3,0,1,8,0,0,0]]
      
     if(solve_sudoku(grid)):
-        for i in range(9):
-        for j in range(9):
-            print arr[i][j],
-        print ('')
+        print_grid(grid)
     else:
         print "No solution exists"
+
+
